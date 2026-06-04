@@ -1,3 +1,7 @@
+import tkinter as tk
+from tkinter import messagebox
+
+
 def open_quiz_page():
     quiz_window = tk.Toplevel(root)
     quiz_window.title("Quiz Page")
@@ -9,7 +13,6 @@ def open_quiz_page():
         font=("Arial", 18)
     ).pack(pady=20)
 
-    # Quiz questions
     quiz_questions = [
         {
             "prompt": "What does 'Mahi' translate to?",
@@ -49,25 +52,27 @@ def open_quiz_page():
     )
     question_label.pack(pady=20)
 
-    selected_answer = tk.StringVar(value=None)  # Initialize with None to avoid pre-selection
+    # No button selected by default
+    selected_answer = tk.StringVar(value="NONE")
 
     option_buttons = []
 
-    # Create radio buttons for options
     for i in range(4):
-        btn = tk.Radiobutton(
+        button = tk.Radiobutton(
             quiz_window,
             text="",
             variable=selected_answer,
-            font=("Arial", 14),
-            value=None  # Set the initial value to None
+            value=f"temp{i}",
+            font=("Arial", 14)
         )
-        btn.pack(anchor="w", padx=200, pady=5)
-        option_buttons.append(btn)
+        button.pack(anchor="w", padx=200, pady=5)
+        option_buttons.append(button)
 
     def load_question():
-        selected_answer.set(None)  # Reset the selected answer to None
+        selected_answer.set("NONE")
+
         question = quiz_questions[current_question]
+
         question_label.config(text=question["prompt"])
 
         for i, option in enumerate(question["options"]):
@@ -76,12 +81,42 @@ def open_quiz_page():
                 value=option
             )
 
+    def show_results():
+        for button in option_buttons:
+            button.destroy()
+
+        next_button.destroy()
+
+        percentage = round((score / len(quiz_questions)) * 100)
+
+        question_label.config(
+            text=(
+                f"Quiz Complete!\n\n"
+                f"Score: {score}/{len(quiz_questions)}\n"
+                f"Percentage: {percentage}%"
+            )
+        )
+
+        return_button = tk.Button(
+            quiz_window,
+            text="Return to Home Page",
+            font=("Arial", 14),
+            width=20,
+            command=quiz_window.destroy
+        )
+        return_button.pack(pady=20)
+
     def next_question():
         nonlocal current_question, score
 
-        question = quiz_questions[current_question]
+        if selected_answer.get() == "NONE":
+            messagebox.showwarning(
+                "No Answer Selected",
+                "Please choose an answer first."
+            )
+            return
 
-        if selected_answer.get() == question["answer"]:
+        if selected_answer.get() == quiz_questions[current_question]["answer"]:
             score += 1
 
         current_question += 1
@@ -89,17 +124,7 @@ def open_quiz_page():
         if current_question < len(quiz_questions):
             load_question()
         else:
-            show_result()
-
-    def show_result():
-        for button in option_buttons:
-            button.destroy()
-
-        next_button.destroy()
-
-        question_label.config(
-            text=f"Quiz Finished!\nYour score: {score}/{len(quiz_questions)}"
-        )
+            show_results()
 
     next_button = tk.Button(
         quiz_window,
@@ -110,3 +135,96 @@ def open_quiz_page():
     next_button.pack(pady=20)
 
     load_question()
+
+
+def open_memory_page():
+    memory_window = tk.Toplevel(root)
+    memory_window.title("Memory Page")
+    memory_window.geometry("800x600")
+
+    tk.Label(
+        memory_window,
+        text="Welcome to the Memory Page!",
+        font=("Arial", 18)
+    ).pack(pady=20)
+
+
+def open_revision_page():
+    revision_window = tk.Toplevel(root)
+    revision_window.title("Revision Page")
+    revision_window.geometry("800x600")
+
+    tk.Label(
+        revision_window,
+        text="Welcome to the Revision Page!",
+        font=("Arial", 18)
+    ).pack(pady=20)
+
+
+def open_challenge_page():
+    challenge_window = tk.Toplevel(root)
+    challenge_window.title("Challenge Page")
+    challenge_window.geometry("800x600")
+
+    tk.Label(
+        challenge_window,
+        text="Welcome to the Challenge Page!",
+        font=("Arial", 18)
+    ).pack(pady=20)
+
+
+def home_page():
+    global root
+
+    root = tk.Tk()
+    root.title("Kupu Quest")
+    root.geometry("1900x1000")
+
+    title_label = tk.Label(
+        root,
+        text="Welcome to Kupu Quest!",
+        font=("Arial", 50, "bold")
+    )
+    title_label.pack(pady=20)
+
+    quiz_button = tk.Button(
+        root,
+        text="Quiz",
+        command=open_quiz_page,
+        width=50,
+        height=5
+    )
+    quiz_button.pack(pady=20)
+
+    memory_button = tk.Button(
+        root,
+        text="Memory",
+        command=open_memory_page,
+        width=50,
+        height=5
+    )
+    memory_button.pack(pady=20)
+
+    revision_button = tk.Button(
+        root,
+        text="Revision",
+        command=open_revision_page,
+        width=50,
+        height=5
+    )
+    revision_button.pack(pady=20)
+
+    challenge_button = tk.Button(
+        root,
+        text="Challenge",
+        command=open_challenge_page,
+        width=50,
+        height=5
+    )
+    challenge_button.pack(pady=20)
+
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    home_page()
