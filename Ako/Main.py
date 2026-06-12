@@ -205,7 +205,7 @@ def home_page():
 
     # Create the main program window
     root = tk.Tk()
-    root.title("Kupu Quest")
+    root.title("Ngā kupu Māori Quest")
     
     # Set the size of the main window to 1900 pixels wide by 1000 pixels high
     root.geometry("1900x1000")
@@ -213,7 +213,7 @@ def home_page():
     # Create the big welcome text at the top
     status = tk.Label(
         root,
-        text="Welcome to Kupu Quest!",
+        text="Welcome to Ngā kupu Māori Quest!",
         font=("Arial", 50, "bold")
     )
     # Put the text on the screen with 20 pixels of extra space above and below it
