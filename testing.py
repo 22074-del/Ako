@@ -91,11 +91,9 @@ def open_quiz_page():
 
         # Update the question label to show the final score
         question_label.config(
-            text=(
-                f"Quiz Complete!\n\n"
-                f"Score: {score}/{len(quiz_questions)}\n"
-                f"Percentage: {percentage}%"
-            )
+            text=(f"Quiz Complete!\n\n"
+                  f"Score: {score}/{len(quiz_questions)}\n"
+                  f"Percentage: {percentage}%")
         )
 
         # Add the player's score to the leaderboard
@@ -112,29 +110,29 @@ def open_quiz_page():
         )
         return_button.pack(pady=20)
 
-def next_question():
-    nonlocal current_question, score  # Only use nonlocal for variables defined in the enclosing scope
-    global error_dialog_open  # Use global for the error_dialog_open variable
+    def next_question():
+        nonlocal current_question, score
+        global error_dialog_open
 
-    if selected_answer.get() == "NONE":
-        if not error_dialog_open:  # Prevent multiple error dialogs
-            error_dialog_open = True
-            messagebox.showwarning(
-                "No Answer Selected",
-                "Please choose an answer first."
-            )
-            error_dialog_open = False
-        return
+        if selected_answer.get() == "NONE":
+            if not error_dialog_open:  # Prevent multiple error dialogs
+                error_dialog_open = True
+                messagebox.showwarning(
+                    "No Answer Selected",
+                    "Please choose an answer first."
+                )
+                error_dialog_open = False
+            return
 
-    if selected_answer.get() == quiz_questions[current_question]["answer"]:
-        score += 1
+        if selected_answer.get() == quiz_questions[current_question]["answer"]:
+            score += 1
 
-    current_question += 1
+        current_question += 1
 
-    if current_question < len(quiz_questions):
-        load_question()
-    else:
-        show_results()
+        if current_question < len(quiz_questions):
+            load_question()
+        else:
+            show_results()
 
     # Next question button
     next_button = tk.Button(

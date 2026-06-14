@@ -2,28 +2,39 @@
 # tkinter is then used to create graphical user interfaces (GUIs)
 import tkinter as tk
 from tkinter import messagebox # Import messagebox so popup warning messages can be displayed
+from tkinter import messagebox, simpledialog # Import simpledialog to allow for input pop-ups to ask the user for their name at the start of the quiz
 
-def open_quiz_page():     # Function that opens the quiz page when the Quiz button is clicked
-    quiz_window = tk.Toplevel(root)     # Create a new window on top of the home page
-    quiz_window.title("Quiz Page")      # Set the title shown at the top of the quiz window
-    quiz_window.geometry("1920x1080")       # Set the size of the quiz window
+# Stores the top quiz scores and player names
+leaderboard = []
+scoreboard_label = None
+error_dialog_open = False  # Flag to prevent multiple error dialogs
 
-    root.iconify()      # Minimise the home page while the quiz is being played
+def open_quiz_page():
+    quiz_window = tk.Toplevel(root)
+    quiz_window.title("Quiz Page")
+    quiz_window.geometry("1920x1080")
+
+    root.iconify()  # Minimise the home page while the quiz is being played
 
     # Helper function to bring back home screen and close quiz
     def close_quiz_and_restore_home():
-        root.deiconify()       # Unminimizes/restores home page
+        root.deiconify()  # Unminimizes/restores home page
         quiz_window.destroy()  # Closes quiz page
 
     # Bind the window close 'X' button to restore the home page
     quiz_window.protocol("WM_DELETE_WINDOW", close_quiz_and_restore_home)
 
-    #Title label for the quiz page
+    # Title label for the quiz page
     tk.Label(
         quiz_window,
         text="Welcome to the Quiz Page!",
         font=("Arial", 18)
     ).pack(pady=20)
+
+    # Prompt the user for their name
+    player_name = simpledialog.askstring("Player Name", "Enter your name:")
+    if not player_name:
+        player_name = "Anonymous"
 
     # 20 quiz questions with 4 options each and the correct answer given in the "answer" key
     quiz_questions = [
