@@ -13,17 +13,20 @@ class Leaderboard:
         self.parent = parent
         self.leaderboard_data = []  # Stores the top quiz scores and player names
 
-        # Create a frame for the leaderboard on the left side of the window
-        self.frame = tk.Frame(self.parent, width=400, height=800, bg="lightgray")
+        # Create a frame for the leaderboard - fixed width so it never expands
+        self.frame = tk.Frame(self.parent, width=180, bg="lightgray")
         self.frame.pack(side="left", fill="y")
+        # Prevent the frame from shrinking or growing to fit its contents
+        self.frame.pack_propagate(False)
 
-        # Create a label inside the frame to display the leaderboard text
+        # wraplength keeps text inside the fixed frame width
         self.label = tk.Label(
             self.frame,
             text="🏆 Scoreboard\n\nNo scores yet",
-            font=("Arial", 18),
+            font=("Arial", 11),
             justify="left",
-            bg="lightgray"
+            bg="lightgray",
+            wraplength=160
         )
         self.label.pack(pady=20, padx=10)
 
@@ -44,12 +47,15 @@ class Leaderboard:
                 key=lambda x: x["score"],
                 reverse=True
             )
-            # Display the top 5 scores
+            # Display the top 5 scores, truncating long names with ...
             for position, player in enumerate(sorted_scores[:5], start=1):
                 percentage = round((player["score"] / player["total"]) * 100)
+                name = player['name']
+                if len(name) > 10:
+                    name = name[:10] + "..."
                 text += (
-                    f"{position}. {player['name']} - "
-                    f"{player['score']}/{player['total']} ({percentage}%)\n"
+                    f"{position}. {name}\n"
+                    f"    {player['score']}/{player['total']} ({percentage}%)\n"
                 )
         self.label.config(text=text)
 
@@ -286,8 +292,8 @@ def home_page():
         root,
         text="Quiz",
         command=lambda: QuizPage(root, leaderboard),
-        width=30,
-        height=3
+        width=10,
+        height=10
     ).pack(pady=20)
 
     # Opens a settings pop-up window
